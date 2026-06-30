@@ -1,6 +1,7 @@
 const userModel = require("../models/user.model");
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken")
+const jwt = require("jsonwebtoken");
+const cookie = require("cookie-parser");
 const registerController = async (req, res) => {
   try {
     let { name, email, password } = req.body;
@@ -39,32 +40,69 @@ const registerController = async (req, res) => {
   }
 };
 
-// const loginController = async (req, res) => {
-//   try {
-//     let { email} = req.body;
+const loginController = async (req, res) => {
+  // Validation Layer
 
-//     const user = await userModel.findOne( {email} );
-//     if (!user) {
-//       return res.status(400).json({
-//         message: "user not found",
-//         success: false,
-//       });
-//     }
-//     return res.status(200).json({
-//       message: "LoggedIn successfully",
-//       success: true,
-//       data: user,
-//     });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({
-//       message: "Internal server error",
-//       success: false,
-//     });
-//   }
-// };
+  try {
+    let { email, password } = req.body;
+    if (!email || !password) {
+      return res.status(400).json({
+        success: false,
+        message: "Email and password are required",
+      });
+    }
+
+    // User Lookup Layer
+
+    const isUserExists = await userModel.findOne({ email });
+    if (!isUserExists) {
+      return res.status(404).json({
+        message: "Invalid email or password",
+        success: false,
+      });
+    }
+
+    // Password Verification Layer
+
+    const comparePass = bcrypt.compareSync(password, isUserExists.password);
+    if (!comparePass) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid credential",
+      });
+    }
+
+    // Authentication Layer
+
+    const token = jwt.sign(
+      { id: isUserExists._id },
+      process.env.JWT_SECRET_KEY,
+      {
+        expiresIn: "1h",
+      },
+    );
+
+    // Set Cookie
+
+    res.cookie("token", token);
+
+    return res.status(200).json({
+      message: "LoggedIn successfully",
+      success: true,
+      isUserExists,
+      token,
+      
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      message: "Internal server error",
+      success: false,
+    });
+  }
+};
 
 module.exports = {
   registerController,
-  
+  loginController,
 };

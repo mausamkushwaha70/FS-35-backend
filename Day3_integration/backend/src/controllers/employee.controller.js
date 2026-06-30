@@ -55,8 +55,7 @@ const readEmployeeController = async (req, res) => {
     return res.status(200).json({
         message:"Employee fetched successfully",
         success:true,
-        data:employee
-
+        data:employee,
     })
 
   } catch (error) {
