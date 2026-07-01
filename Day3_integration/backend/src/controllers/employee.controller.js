@@ -44,29 +44,19 @@ const createEmployeeController = async (req, res) => {
 
 const readEmployeeController = async (req, res) => {
   try {
-    let { id } = req.params;
-    let employee = await EmployeeModel.findById(id);
-    if (!employee) {
-      return res.status(400).json({
-        message: "Employee not found",
-        success: false,
-      });
-    }
+    const allEmployee = await EmployeeModel.find();
+
     return res.status(200).json({
-        message:"Employee fetched successfully",
-        success:true,
-        data:employee,
-    })
-
+      success: true,
+      message: "Employees fetched",
+      data: allEmployee,
+    });
   } catch (error) {
-    // console.log("Internal server error",error)
     return res.status(500).json({
-        message:("Internal server error",error),
-
-    })
+      success: false,
+      message: "Something went wrong",
+    });
   }
-    
-
 };
 
 module.exports = {

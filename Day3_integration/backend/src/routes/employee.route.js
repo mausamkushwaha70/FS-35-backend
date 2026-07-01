@@ -3,7 +3,7 @@ const express = require("express")
 const  router = express.Router()
 
 router.post("/create",createEmployeeController);
-router.get("/read", readEmployeeController)
+router.get("/", readEmployeeController)
 
 
 

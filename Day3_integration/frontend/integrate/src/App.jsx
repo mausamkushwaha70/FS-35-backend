@@ -95,7 +95,7 @@ const App = () => {
 
       <div className="grid grid-cols-3 gap-4">
         {employees.map((val) => {
-          return <EmployeeCard employee={val} />;
+          return <EmployeeCard key={employees.id} employee={val} />;
         })}
       </div>
     </div>
