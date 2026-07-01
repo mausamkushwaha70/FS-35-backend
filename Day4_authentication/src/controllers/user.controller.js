@@ -24,7 +24,7 @@ const registerController = async (req, res) => {
       expiresIn: "1h",
     });
 
-    res.cookie("token", token);
+    res.cookie("secret", token);
 
     return res.status(201).json({
       message: "User registered",
@@ -84,7 +84,7 @@ const loginController = async (req, res) => {
 
     // Set Cookie
 
-    res.cookie("token", token);
+    res.cookie("secret", token);
 
     return res.status(200).json({
       message: "LoggedIn successfully",
