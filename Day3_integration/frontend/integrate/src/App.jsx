@@ -26,7 +26,7 @@ const App = () => {
     try {
       let res = await axios.post(
         "http://localhost:3000/api/employees/create",
-        formData
+        formData,
       );
       console.log("res->", res);
     } catch (error) {
@@ -35,8 +35,8 @@ const App = () => {
   };
 
   return (
-    <div>
-      <h1>Hello</h1>
+    <div className="w-full h-full bg-[#223146] flex flex-col justify-center items-center gap-3 border-1 border-gray-900 ">
+      <h1 className="font-bold text-xl text-[#b9dae0]">Create Employee Id</h1>
 
       <form
         onSubmit={handleSubmit}
@@ -45,41 +45,48 @@ const App = () => {
           gap: "10px",
           width: "300px",
           flexDirection: "column",
+          
         }}
         action=""
       >
         <input
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           name="employeeName"
           type="text"
           placeholder="Name"
         />
         <input
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           name="email"
           type="text"
           placeholder="email"
         />
         <input
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           name="mobile"
           type="text"
           placeholder="mobile"
         />
         <input
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           name="address"
           type="text"
           placeholder="address"
         />
         <input
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           name="company"
           type="text"
           placeholder="company"
         />
         <input
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           name="designation"
           type="text"
           placeholder="designation"
@@ -87,15 +94,17 @@ const App = () => {
         <input
           name="employeeId"
           onChange={handleChange}
+          className="outline-0 text-white border rounded px-0.5 py-1 text-sm"
           type="text"
           placeholder="Employee id"
+          required
         />
-        <button>Submit</button>
+        <button className="bg-green-500 rounded cursor-pointer">Submit</button>
       </form>
 
       <div className="grid grid-cols-3 gap-4">
         {employees.map((val) => {
-          return <EmployeeCard key={employees.id} employee={val} />;
+          return <EmployeeCard key={val._id} employee={val} />;
         })}
       </div>
     </div>

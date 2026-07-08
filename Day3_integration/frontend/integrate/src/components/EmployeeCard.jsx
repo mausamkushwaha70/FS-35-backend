@@ -10,7 +10,7 @@ import {
 
 const EmployeeCard = ({ employee }) => {
   return (
-    <div className="w-full max-w-md rounded-2xl border border-gray-200 bg-white p-6 shadow-md transition-all hover:shadow-xl">
+    <div className="w-full max-w-md rounded-2xl border bg-amber-700 border-gray-200 bg-white p-6 shadow-md transition-all hover:shadow-xl">
       {/* Header */}
       <div className="flex items-center gap-4">
         <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 text-xl font-bold text-blue-600">

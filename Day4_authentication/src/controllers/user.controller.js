@@ -12,6 +12,8 @@ const registerController = async (req, res) => {
       });
     }
 
+    //Password hashing
+
     let hashPass = bcrypt.hashSync(password, 10);
 
     let newUser = await userModel.create({
@@ -52,7 +54,7 @@ const loginController = async (req, res) => {
       });
     }
 
-    // User Lookup Layer
+  // User Lookup Layer
 
     const isUserExists = await userModel.findOne({ email });
     if (!isUserExists) {
@@ -102,7 +104,19 @@ const loginController = async (req, res) => {
   }
 };
 
+
+const getMeController = async (req, res) => {
+  try {
+    // cookie/token se user id nikaalo
+    // user find karo
+    return res.status(200).json({ success: true, data: user });
+  } catch (error) {
+    return res.status(500).json({ success: false, message: "Internal server error" });
+  }
+};
+
 module.exports = {
   registerController,
   loginController,
+  getMeController
 };
