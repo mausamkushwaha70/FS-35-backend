@@ -7,7 +7,7 @@ import HomePage from '../pages/HomePage'
 import { useDispatch } from 'react-redux'
 import { axiosInstance } from '../config/axiosInstance'
 import { useEffect } from 'react'
-import addUser from "../features/authSlice"
+import {addUser} from "../features/authSlice"
 
 
 const AppRoute = () => {
@@ -15,7 +15,8 @@ const AppRoute = () => {
     const dispatch = useDispatch();
     const userHydration = async () => {
         try {
-            let res = await axiosInstance.get("/api/auth/getMe",);
+            let res = await axiosInstance.get("/api/auth/getMe");
+            console.log(res)
             dispatch(addUser(res.data.data));
             console.log(res)
 

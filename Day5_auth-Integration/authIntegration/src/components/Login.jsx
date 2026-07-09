@@ -1,37 +1,30 @@
 import React, { useState } from "react";
 import { axiosInstance } from "../config/axiosInstance";
 import { useDispatch } from "react-redux";
-import addUser from "../features/authSlice"
+import { addUser } from "../features/authSlice";
 
 const Login = ({ setToggle }) => {
-
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const [formData, setFormData] = useState({});
 
-  const handleChange = (e)=>{
-    let {name, value}= e.target;
-    setFormData({...formData, [name]:value})
+  const handleChange = (e) => {
+    let { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
+  };
 
-  }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-const handleSubmit = async (e)=>{
-  e.preventDefault();
+    try {
+      let res = await axiosInstance.post("/api/auth/login", formData);
+      console.log(res.data.isUserExists);
+      dispatch(addUser(res.data.isUserExists));
+    } catch (error) {
+      console.log("error in register api", error);
+    }
+  };
 
-  try {
-    let res = await axiosInstance.post("/api/auth/login", formData);
-    console.log(res.data.isUserExists);
-    dispatch(addUser(res.data.isUserExists))
-
-  } catch (error) {
-    console.log("error in register api", error)
-
-  }
-
-
-}
-
-    
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-100 px-4">
       <div className="w-full max-w-md bg-white rounded-2xl shadow-lg p-8">
@@ -43,15 +36,15 @@ const handleSubmit = async (e)=>{
           Login to your account
         </p>
 
-        <form onSubmit={handleSubmit}
-         className="space-y-5">
+        <form onSubmit={handleSubmit} className="space-y-5">
           <div>
             <label className="block mb-2 font-medium text-gray-700">
               Email
             </label>
 
-            <input onChange={handleChange}
-            name="email"
+            <input
+              onChange={handleChange}
+              name="email"
               type="email"
               placeholder="Enter your email"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
@@ -63,8 +56,9 @@ const handleSubmit = async (e)=>{
               Password
             </label>
 
-            <input onChange={handleChange}
-            name="password"
+            <input
+              onChange={handleChange}
+              name="password"
               type="password"
               placeholder="Enter your password"
               className="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:ring-2 focus:ring-indigo-500"
