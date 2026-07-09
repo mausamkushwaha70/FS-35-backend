@@ -105,18 +105,9 @@ const loginController = async (req, res) => {
 };
 
 
-const getMeController = async (req, res) => {
-  try {
-    // cookie/token se user id nikaalo
-    // user find karo
-    return res.status(200).json({ success: true, data: user });
-  } catch (error) {
-    return res.status(500).json({ success: false, message: "Internal server error" });
-  }
-};
+
 
 module.exports = {
   registerController,
   loginController,
-  getMeController
 };

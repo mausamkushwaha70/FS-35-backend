@@ -9,6 +9,7 @@ router.get("/", authMiddleware, (req, res) => {
     message: "I m home route",
     data: req.user,
   });
+  console.log(res)
 });
 
 module.exports = router;

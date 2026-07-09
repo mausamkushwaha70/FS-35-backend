@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 
 
-const userVerifyMiddleware = (req, res, next) => {
+const authMiddleware = (req, res, next) => {
 
   const token = req.cookies.secret;
 
@@ -27,4 +27,4 @@ const userVerifyMiddleware = (req, res, next) => {
     }
 };
 
-module.exports = userVerifyMiddleware;
+module.exports = authMiddleware;
