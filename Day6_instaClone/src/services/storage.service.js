@@ -3,9 +3,9 @@ dotenv.config();
 import Imagekit from "imagekit";
 
 const storageInstance = new Imagekit({
-    pub_key: process.env.PUB_KEY,
-    priv_key: process.env.PRI_KEY,
-    urlEndpoint: process.env.URL,
+    publicKey:process.env.IMAGEKIT_PUBLIC_KEY,
+    privateKey:process.env.IMAGEKIT_PRIVATE_KEY,
+    urlEndpoint:process.env.IMAGEKIT_URL_ENDPOINT
 });
 
 export const sendFile = async (file, fileName) => {
@@ -15,5 +15,5 @@ export const sendFile = async (file, fileName) => {
         folder: "instaClone",
     };
 
-    return  await storageInstance.upload(obj)
+    return await storageInstance.upload(obj);
 };
