@@ -7,7 +7,7 @@ const userSchema = new mongoose.Schema(
       type: String,
       require: [true, "username is required"],
       unique: true,
-      trim:true
+      trim: true
     },
     fullName: {
       type: String,
@@ -23,7 +23,7 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       require: [true, "username is required"],
-      unique:true,
+      unique: true,
       minlength: 8,
     },
     mobile: {
@@ -94,6 +94,10 @@ const userSchema = new mongoose.Schema(
 userSchema.pre("save", function () {
   this.password = bcrypt.hashSync(this.password, 10);
 });
+
+userSchema.methods.comparePass = function (password) {
+  return bcrypt.compareSync(password, this.password);
+};
 
 
 const userModel = mongoose.model("user", userSchema);

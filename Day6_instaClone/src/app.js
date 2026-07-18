@@ -1,8 +1,13 @@
 import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
-const app = express()
+import authRoute from "../src/routes/auth.routes.js"
+import cookieParser from "cookie-parser";
 
+const app = express()
+app.use(cookieParser());
 app.use(express.json());
+
+app.use("/api/auth", authRoute)
 
 export default app;
