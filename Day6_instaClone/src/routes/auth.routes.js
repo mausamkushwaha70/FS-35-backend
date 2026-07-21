@@ -5,7 +5,7 @@ import {upload} from "../config/multer.js"
 const router = express.Router();
 
 router.post("/register",upload.single("image") ,registerController);
-router.post("/login",loginController);
+router.post("/login",authMiddleware,loginController);
 
 
 
