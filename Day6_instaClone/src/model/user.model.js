@@ -23,7 +23,6 @@ const userSchema = new mongoose.Schema(
     password: {
       type: String,
       require: [true, "username is required"],
-      unique: true,
       minlength: 8,
     },
     mobile: {
@@ -96,9 +95,9 @@ userSchema.pre("save", function () {
 });
 
 userSchema.methods.comparePass = function (password) {
-  return bcrypt.compareSync(password, this.password);
+  return bcrypt.compare(password, this.password);
 };
 
 
-const userModel = mongoose.model("user", userSchema);
+const userModel = mongoose.model("users", userSchema);
 export default userModel;
