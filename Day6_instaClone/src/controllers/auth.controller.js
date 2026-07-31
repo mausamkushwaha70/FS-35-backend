@@ -18,7 +18,7 @@ export const registerController = async (req, res) => {
     }
 
     const uploadFile = await sendFile(file.buffer, file.originalname);
-    
+
     const newUser = await userModel.create({
       userName,
       fullName,
@@ -47,7 +47,7 @@ export const registerController = async (req, res) => {
 
     return res.status(201).json({
       success: true,
-      user: newUser, 
+      user: newUser,
     });
 
   } catch (error) {
@@ -69,7 +69,7 @@ export const loginController = async (req, res) => {
       });
     }
 
-    const isExist = await userModel.findOne({email});
+    const isExist = await userModel.findOne({ email });
     console.log(isExist)
     if (!isExist) {
       return res.status(404).json({
@@ -78,8 +78,8 @@ export const loginController = async (req, res) => {
       });
     }
 
-const isPasswordCorrect = isExist.comparePass(password);
-
+    const isPasswordCorrect = await isExist.comparePass(password);
+    console.log("password : " , isPasswordCorrect)
     if (!isPasswordCorrect) {
       return res.status(401).json({
         success: false,
@@ -105,16 +105,16 @@ const isPasswordCorrect = isExist.comparePass(password);
     return res.status(200).json({
       success: true,
       message: "User loggedIn",
-      
+
     });
   } catch (error) {
     return res.status(500).json({
       success: false,
       message: "internal server error",
-      error:error.message,
+      error: error.message,
     });
     console.log(error)
   }
 };
 
-const updateController = async (req, res) => {};
+const updateController = async (req, res) => { };
