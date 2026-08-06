@@ -49,7 +49,6 @@ export const registerController = async (req, res) => {
       success: true,
       user: newUser,
     });
-
   } catch (error) {
     return res.status(500).json({
       success: false,
@@ -70,7 +69,7 @@ export const loginController = async (req, res) => {
     }
 
     const isExist = await userModel.findOne({ email });
-    console.log(isExist)
+    console.log(isExist);
     if (!isExist) {
       return res.status(404).json({
         success: false,
@@ -79,7 +78,7 @@ export const loginController = async (req, res) => {
     }
 
     const isPasswordCorrect = await isExist.comparePass(password);
-    console.log("password : " , isPasswordCorrect)
+    console.log("password : ", isPasswordCorrect);
     if (!isPasswordCorrect) {
       return res.status(401).json({
         success: false,
@@ -105,7 +104,6 @@ export const loginController = async (req, res) => {
     return res.status(200).json({
       success: true,
       message: "User loggedIn",
-
     });
   } catch (error) {
     return res.status(500).json({
@@ -113,7 +111,7 @@ export const loginController = async (req, res) => {
       message: "internal server error",
       error: error.message,
     });
-    console.log(error)
+    console.log(error);
   }
 };
 

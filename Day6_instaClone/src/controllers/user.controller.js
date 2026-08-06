@@ -286,47 +286,50 @@ export const getFollowingsController = async (req, res) => {
 
 export const changePassController = async (req, res) => {
     try {
-       const {password,newPassword} = req.body
+        const { password, newPassword } = req.body;
 
-  if(!password || !newPassword) return res.status(400).json({
-    success:false,
-    message:"both fields are required"
-  })
+        if (!password || !newPassword)
+            return res.status(400).json({
+                success: false,
+                message: "both fields are required",
+            });
 
-  console.log(password)
+        console.log(password);
 
-  if(password === newPassword) return res.status(409).json({
-    success:false,
-    message:"enter different password"
-  })
+        if (password === newPassword)
+            return res.status(409).json({
+                success: false,
+                message: "enter different password",
+            });
 
-  const user = await userModel.findById(req.user.id)
-  console.log(user)
+        const user = await userModel.findById(req.user.id);
+        console.log(user);
 
-  if(!user) return res.status(404).json({
-    success:false,
-    message:"user details not found"
-  })
+        if (!user)
+            return res.status(404).json({
+                success: false,
+                message: "user details not found",
+            });
 
-  const isPassworMatched = await user.comparePass(password)
-  console.log(isPassworMatched)
+        const isPassworMatched = await user.comparePass(password);
+        console.log(isPassworMatched);
 
-  if(!isPassworMatched) return res.status(400).json({
-    success:false,
-    message:"incorrect password"
-  })
+        if (!isPassworMatched)
+            return res.status(400).json({
+                success: false,
+                message: "incorrect password",
+            });
 
-  user.password = newPassword
+        user.password = newPassword;
 
-  await user.save()
+        await user.save();
 
-  return res.status(200).json({
-    success:true,
-    message:"password changed successfully"
-  })
-
+        return res.status(200).json({
+            success: true,
+            message: "password changed successfully",
+        });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json({
             success: false,
             message: error.message,

@@ -73,10 +73,9 @@ export const updatePostController = async (req, res) => {
     if (!updatePost) {
       return res.status(400).json({
         success: false,
-        message: "Post not found"
+        message: "Post not found",
       });
     }
-
 
     return res.status(200).json({
       success: true,
@@ -94,7 +93,7 @@ export const updatePostController = async (req, res) => {
 
 export const deletePostController = async (req, res) => {
   try {
-    let {id} = req.params
+    let { id } = req.params;
     if (!id) {
       return res.status(400).json({
         success: false,
