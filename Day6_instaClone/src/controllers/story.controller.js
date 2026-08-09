@@ -1,45 +1,93 @@
 import storyModel from "../model/story.model.js";
+import userModel from "../model/user.model.js";
 import { sendFile } from "../services/storage.service.js";
 
 export const storyCreateController = async (req, res) => {
-    const { caption } = req.body;
-    const file = req.file;
-    console.log(req.body);
+    try {
+        const { caption } = req.body;
+        const file = req.file;
+        // console.log(req.body);
+        // console.log(file);
 
-    console.log(file);
-    if (!file)
-        return res.status(400).json({
-            success: false,
-            message: "file is required",
+        if (!file)
+            return res.status(400).json({
+                success: false,
+                message: "file is required",
+            });
+
+        let media_Type;
+
+        if (file.mimetype.startsWith("image")) {
+            media_Type = "image";
+        } else if (file.mimetype.startsWith("video")) {
+            media_Type = "video";
+        } else {
+            return res.status(400).json({
+                success: false,
+                message: "Invalid media type ",
+            });
+        }
+
+        const uploadFile = await sendFile(file.buffer, file.originalname);
+        console.log(uploadFile);
+
+        const story = await storyModel.create({
+            user: req.user.id,
+            media_type: media_Type,
+            media_url: uploadFile.url,
+            caption,
         });
 
-    let media_Type;
-
-    if (file.mimetype.startsWith("image")) {
-        media_Type = "image";
-    } else if (file.mimetype.startsWith("video")) {
-        media_Type = "video";
-    } else {
-        return res.status(400).json({
+        return res.status(201).json({
+            success: true,
+            message: "story created succesfully",
+            story,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
             success: false,
-            message: "Invalid media type ",
+            message: "internal server error",
+            error: error.message,
         });
     }
+};
 
-    const uploadFile = await sendFile(file.buffer, file.originalname);
-    console.log(uploadFile)
+export const getStory = async (req, res) => {
+    try {
+        const user = await userModel.findById(req.user.id);
 
-    
-    const story = await storyModel.create({
-        user: req.user.id,
-        media_type:media_Type,
-        media_url: uploadFile.url,
-        caption,
-    });
+        if (!user)
+            return res.status(400).json({
+                success: false,
+                message: "user is not found",
+            });
 
-    return res.status(201).json({
-        success: true,
-        message: "story created succesfully",
-        story,
-    });
+        const fetchUser = [...user.followings, req.user.id];
+        console.log(fetchUser);
+
+        const story = await storyModel
+            .find({
+                user: { $in: fetchUser },
+            })
+            .sort({ createdAt: -1 })
+            .populate("user", "userName profile_pic");
+
+        return res.status(200).json({
+            success: true,
+            message: "stories fetched successfully",
+            story,
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "internal sever error",
+            error: error.message,
+        });
+    }
+};
+
+export const viewStory = async (req, res) => {
+    const storyId = req.params.id;
 };

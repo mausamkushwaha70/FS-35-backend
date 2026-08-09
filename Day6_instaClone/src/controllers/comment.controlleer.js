@@ -48,6 +48,8 @@ export const createCommentController = async (req, res) => {
     }
 };
 
+
+
 export const getCommentController = async (req, res) => {
     try {
         const postId = req.params.id;
@@ -85,6 +87,7 @@ export const getCommentController = async (req, res) => {
         });
     }
 };
+
 
 
 export const editCommentController = async (req,res) =>{
@@ -130,12 +133,6 @@ export const editCommentController = async (req,res) =>{
         })
     }
 }
-
-
-
-
-
-
 
 
 
