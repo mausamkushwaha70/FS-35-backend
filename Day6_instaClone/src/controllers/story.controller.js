@@ -1,3 +1,4 @@
+import ImageKit from "imagekit";
 import storyModel from "../model/story.model.js";
 import userModel from "../model/user.model.js";
 import { sendFile } from "../services/storage.service.js";
@@ -92,45 +93,79 @@ export const viewStory = async (req, res) => {
     try {
         const storyId = req.params.id;
         const story = await storyModel.findById(storyId);
-        console.log(storyId)
-        console.log(story)
+        console.log(storyId);
+        console.log(story);
         if (!story)
             return res.status(400).json({
                 success: false,
                 message: "story not found",
             });
 
-        if(String(storyId.user)=== req.user.id){
+        if (String(storyId.user) === req.user.id) {
             return res.status(200).json({
-                success:true,
-                message:"you are watching your own story",
-                story
-            })
+                success: true,
+                message: "you are watching your own story",
+                story,
+            });
         }
         const alreadyExist = story.viewers.includes(req.user.id);
-        if(alreadyExist) return res.status(200).json({
-            success:true,
-            message:"you already view this story",
-            story
-        })
+        if (alreadyExist)
+            return res.status(200).json({
+                success: true,
+                message: "you already view this story",
+                story,
+            });
 
-        story.viewers.push(req.user.id)
+        story.viewers.push(req.user.id);
 
-
-        await story.save()
+        await story.save();
 
         return res.status(200).json({
-            success:true,
-            message:"story viewed successfully",
-            viewers:story.viewers,
-            count:story.viewers.length
-        })
+            success: true,
+            message: "story viewed successfully",
+            viewers: story.viewers,
+            count: story.viewers.length,
+        });
     } catch (error) {
-        console.log(error)
+        console.log(error);
         return res.status(500).json({
-            success:false,
-            message:"internal server error",
-            error:error.message
-        })
-     }
+            success: false,
+            message: "internal server error",
+            error: error.message,
+        });
+    }
+};
+
+export const deleteStory = async (req, res) => {
+    try {
+        const storyId = req.params.id;
+        const story = await storyModel.findById(storyId);
+        if (!story) {
+            return res.status(400).json({
+                success: false,
+                message: "stroy not found",
+            });
+        }
+
+        if (String(story.user) !== req.user.id)
+            return res.status(403).json({
+                success: false,
+                message: "forbidden",
+            });
+
+        
+
+        await story.deleteOne();
+
+        return res.status(200).json({
+            success: true,
+            message: "story delted successfull",
+        });
+    } catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            success: false,
+            message: "Internal server error",
+        });
+    }
 };
