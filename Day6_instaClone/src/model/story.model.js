@@ -22,6 +22,11 @@ const storySchema = new mongoose.Schema({
         required: true
     },
 
+    media_fileID:{
+        type:String,
+        required:true
+    },
+
     likes: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "users",

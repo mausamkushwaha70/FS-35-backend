@@ -1,7 +1,6 @@
-import ImageKit from "imagekit";
 import storyModel from "../model/story.model.js";
 import userModel from "../model/user.model.js";
-import { sendFile } from "../services/storage.service.js";
+import { sendFile, deleteFile } from "../services/storage.service.js";
 
 export const storyCreateController = async (req, res) => {
     try {
@@ -36,6 +35,7 @@ export const storyCreateController = async (req, res) => {
             user: req.user.id,
             media_type: media_Type,
             media_url: uploadFile.url,
+            media_fileID: uploadFile.fileId,
             caption,
         });
 
@@ -101,7 +101,7 @@ export const viewStory = async (req, res) => {
                 message: "story not found",
             });
 
-        if (String(storyId.user) === req.user.id) {
+        if (String(story.user) === req.user.id) {
             return res.status(200).json({
                 success: true,
                 message: "you are watching your own story",
@@ -153,7 +153,7 @@ export const deleteStory = async (req, res) => {
                 message: "forbidden",
             });
 
-        
+        await deleteFile(story.media_fileID);
 
         await story.deleteOne();
 
