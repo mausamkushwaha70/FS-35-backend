@@ -17,3 +17,7 @@ export const sendFile = async (file, fileName) => {
 
     return await storageInstance.upload(obj);
 };
+
+export const deleteFile = async (fileId)=>{
+    return await storageInstance.deleteFile(fileId)
+}
