@@ -55,4 +55,21 @@ export const createReels = async (req, res) => {
 };
 
 
+export const getReels = async (req,res)=>{
+  try {
+   const allReels = await reelsModel.find()
+   return res.status(200).json({
+      success:true,
+      message:"All reels fetched",
+      allReels
+   })
+  } catch (error) {
+   console.log(error);
+   return res.status(500).json({
+      success:false,
+      message:"Internal server error"
+   })
+  }
+
+}
 
