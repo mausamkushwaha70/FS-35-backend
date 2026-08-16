@@ -72,49 +72,63 @@ export const getReels = async (req, res) => {
 };
 
 export const likesReelsController = async (req, res) => {
-   try {
-      const reelId = req.params.id;
-      const reel = await reelsModel.findById(reelId);
+  try {
+    const reelId = req.params.id;
+    const reel = await reelsModel.findById(reelId);
 
-      if (!reel) {
-         return res.status(400).json({
-            success: false,
-            message: "reels not found",
-         });
-      }
+    if (!reel) {
+      return res.status(404).json({
+        success: false,
+        message: "reels not found",
+      });
+    }
 
-      if (String(reel.id) === req.user.id) {
-         return res.status(200).json({
-            success: true,
-            message: "you likes your own video",
-            reel,
-         });
-      }
+    const alreadyLike = reel.likes.some(
+      (userId) => String(userId) === String(req.user.id),
+    );
 
-      const alreadyLike = reel.likes.includes(req.user.id);
-      if (alreadyLike) {
-         return res.status(200).json({
-            success: true,
-            message: "you already like your video",
-            reel,
-         });
-      }
+    if (alreadyLike) {
+      reel.likes = reel.likes.filter(
+        (userId) => String(userId) !== String(req.user.id),
+      );
 
-      reel.likes.push(req.user.id);
       await reel.save();
-
       return res.status(200).json({
-         success: true,
-         message: "reels likes successfully",
-         reel,
-         likes: reel.likes,
-         count: reel.likes.length,
+        success: true,
+        message: "reel unliked successfully",
+        reel,
+        likes: reel.likes,
+        count: reel.likes.length,
       });
-   } catch (error) {
-      console.log(error);
-      return res.status(500).json({
-         success: false,
-         message: "internal server error",
-      });
-   }
+    }
+
+    reel.likes.push(req.user.id);
+    await reel.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "reel liked successfully",
+      reel,
+      likes: reel.likes,
+      count: reel.likes.length,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+      error: error.message,
+    });
+  }
 };
+
+// export const unlikeReelsController = async (req, res) => {
+//   const reelId = req.params.id;
+//   const reel = await reelsModel.findById(reelId);
+
+//   if (!reel)
+//     return res.status(400).json({
+//       success: false,
+//       message: "reels not found",
+//     });
+// };
