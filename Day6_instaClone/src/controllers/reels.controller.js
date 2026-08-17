@@ -88,10 +88,10 @@ export const likesReelsController = async (req, res) => {
     );
 
     if (alreadyLike) {
-      reel.likes = reel.likes.filter(
+       reel.likes = reel.likes.filter(
         (userId) => String(userId) !== String(req.user.id),
       );
-
+      
       await reel.save();
       return res.status(200).json({
         success: true,
@@ -122,13 +122,45 @@ export const likesReelsController = async (req, res) => {
   }
 };
 
-// export const unlikeReelsController = async (req, res) => {
-//   const reelId = req.params.id;
-//   const reel = await reelsModel.findById(reelId);
+export const reelViewsController = async (req, res) => {
+  try {
+    const reelId = req.params.id;
+    const reel = await reelsModel.findById(reelId);
+    console.log(reel);
 
-//   if (!reel)
-//     return res.status(400).json({
-//       success: false,
-//       message: "reels not found",
-//     });
-// };
+    if (!reel) {
+      return res.status(404).json({
+        success: false,
+        message: "reels not fouund",
+      });
+    }
+
+    const alreadyViewReel = reel.viewers.includes((req.user.id));
+
+    if (alreadyViewReel) {
+      return res.status(200).json({
+        success: true,
+        message: "already you watch this reel",
+        view: reel.viewers,
+        count: reel.viewers.length,
+      });
+    }
+
+    reel.viewers.push(req.user.id);
+
+    await reel.save();
+
+    return res.status(200).json({
+      success: true,
+      message: "reels view successfully",
+      views: reel.viewers,
+      count: reel.viewers.length,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "internal server error",
+    });
+  }
+};
