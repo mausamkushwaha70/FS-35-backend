@@ -1,4 +1,4 @@
-import commentMondel from "../model/comment.model.js";
+import commentModel from "../model/comment.model.js";
 import PostModel from "../model/post.model.js";
 
 export const createCommentController = async (req, res) => {
@@ -23,7 +23,7 @@ export const createCommentController = async (req, res) => {
             });
         }
 
-        const comment = await commentMondel.create({
+        const comment = await commentModel.create({
             text,
             post: _id,
             user: req.user.id,
@@ -103,7 +103,7 @@ export const editCommentController = async (req,res) =>{
             message:"CommentId and editComment is required"
         })
 
-        const comment =  await commentMondel.findById(commentId)
+        const comment =  await commentModel.findById(commentId)
         // console.log(comment)
 
         if(!comment) return res.status(404).json({
@@ -147,7 +147,7 @@ export const deleteCommentController = async (req, res) => {
             });
         }
 
-        const comment = await commentMondel.findById(commentId);
+        const comment = await commentModel.findById(commentId);
 
         if (!comment) {
             return res.status(404).json({
@@ -165,7 +165,7 @@ export const deleteCommentController = async (req, res) => {
         const post = await PostModel.findById(comment.post);
         post.comments.pull(commentId);
 
-        await commentMondel.findOneAndDelete(commentId);
+        await commentModel.findOneAndDelete(commentId);
 
         await post.save();
 

@@ -1,6 +1,8 @@
 import { json } from "express";
 import reelsModel from "../model/reels.model.js";
 import { sendFile } from "../services/storage.service.js";
+// import { Suspense } from "react";
+import commentModel from "../model/comment.model.js";
 
 export const createReels = async (req, res) => {
   try {
@@ -88,10 +90,10 @@ export const likesReelsController = async (req, res) => {
     );
 
     if (alreadyLike) {
-       reel.likes = reel.likes.filter(
+      reel.likes = reel.likes.filter(
         (userId) => String(userId) !== String(req.user.id),
       );
-      
+
       await reel.save();
       return res.status(200).json({
         success: true,
@@ -164,3 +166,46 @@ export const reelViewsController = async (req, res) => {
     });
   }
 };
+
+export const reelCommentController = async (req, res) => {
+  try {
+    const reelId = req.params.id;
+    const { text } = req.body;
+
+    if(!postId){
+      return res.status(404).json({
+        success:false,
+        message:"reelId is required"
+      })
+    }
+    const reel = await reelsModel.findById(reelId);
+
+    if (!reel || !text) {
+      return res.status(404).json({
+        success: false,
+        message: "reel not found "
+      })
+    }
+
+    const comment = await commentModel.create({
+      reel: reelId,
+      text,
+      user: req.user.id
+    })
+
+    reel.comments.push(comment._id)
+    await reel.save()
+
+    return res.status(200).json({
+      success: true,
+      message: "comment successfully",
+      comment
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      success: false,
+      message: "internal server error"
+    })
+  }
+}
