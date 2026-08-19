@@ -1,4 +1,3 @@
-import { text } from "express";
 import mongoose from "mongoose";
 const commentSchema = new mongoose.Schema(
     {
@@ -18,7 +17,7 @@ const commentSchema = new mongoose.Schema(
             {
                 type: mongoose.Schema.Types.ObjectId,
                 ref: "users",
-                unique:true
+                unique: true
             },
         ],
     },
@@ -27,5 +26,5 @@ const commentSchema = new mongoose.Schema(
     },
 );
 
-const commentMondel = mongoose.model("comments", commentSchema);
-export default commentMondel;
+const commentModel = mongoose.model("comments", commentSchema);
+export default commentModel;

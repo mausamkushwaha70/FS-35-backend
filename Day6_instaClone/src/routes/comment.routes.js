@@ -10,7 +10,7 @@ import {
 const router = express.Router();
 
 router.post("/create", authMiddleware, createCommentController);
-router.get("/getComment/:id", getCommentController);
+router.get("/getComment/:id",authMiddleware, getCommentController);
 router.patch("/editComment/:id",authMiddleware,editCommentController)
 router.delete("/delete/:id", authMiddleware, deleteCommentController);
 

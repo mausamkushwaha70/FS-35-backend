@@ -172,10 +172,10 @@ export const reelCommentController = async (req, res) => {
     const reelId = req.params.id;
     const { text } = req.body;
 
-    if(!postId){
+    if (!reelId) {
       return res.status(404).json({
-        success:false,
-        message:"reelId is required"
+        success: false,
+        message: "reelId is required"
       })
     }
     const reel = await reelsModel.findById(reelId);
@@ -209,3 +209,46 @@ export const reelCommentController = async (req, res) => {
     })
   }
 }
+
+export const getReelCommentController = async (req, res) => {
+  try {
+    const reelId = req.params.id;
+
+    if (!reelId) {
+      return res.status(400).json({
+        success: false,
+        message: "reelId is required",
+      });
+    }
+
+    const reel = await reelsModel.findById(reelId).populate({
+      path: "comments",
+      populate: {
+        path: "user",
+        select: "userName profile_pic",
+      },
+    });
+
+    console.log(reel)
+
+    if (!reel) {
+      return res.status(404).json({
+        success: false,
+        message: "Reel not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "Comments fetched successfully",
+      comment: reel.comments,
+    });
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({
+      success: false,
+      message: "Internal server error",
+      error: error.message,
+    });
+  }
+};
