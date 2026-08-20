@@ -137,7 +137,7 @@ export const reelViewsController = async (req, res) => {
       });
     }
 
-    const alreadyViewReel = reel.viewers.includes((req.user.id));
+    const alreadyViewReel = reel.viewers.includes(req.user.id);
 
     if (alreadyViewReel) {
       return res.status(200).json({
@@ -175,40 +175,40 @@ export const reelCommentController = async (req, res) => {
     if (!reelId) {
       return res.status(404).json({
         success: false,
-        message: "reelId is required"
-      })
+        message: "reelId is required",
+      });
     }
     const reel = await reelsModel.findById(reelId);
 
     if (!reel || !text) {
       return res.status(404).json({
         success: false,
-        message: "reel not found "
-      })
+        message: "reel not found ",
+      });
     }
 
     const comment = await commentModel.create({
       reel: reelId,
       text,
-      user: req.user.id
-    })
+      user: req.user.id,
+    });
 
-    reel.comments.push(comment._id)
-    await reel.save()
+    reel.comments.push(comment._id);
+    await reel.save();
 
     return res.status(200).json({
       success: true,
       message: "comment successfully",
-      comment
-    })
+      comment,
+    });
   } catch (error) {
-    console.log(error)
+    console.log(error);
     return res.status(500).json({
       success: false,
-      message: "internal server error"
-    })
+      message: "internal server error",
+    });
   }
-}
+};
 
 export const getReelCommentController = async (req, res) => {
   try {
@@ -229,7 +229,7 @@ export const getReelCommentController = async (req, res) => {
       },
     });
 
-    console.log(reel)
+    console.log(reel);
 
     if (!reel) {
       return res.status(404).json({
@@ -251,4 +251,37 @@ export const getReelCommentController = async (req, res) => {
       error: error.message,
     });
   }
+};
+
+export const reelDeleteController = async (req, res) => {
+  try {
+    const reelId = req.params.id;
+
+    if (!reelId) {
+      return res.status(400).json({
+        success: false,
+        message: "reelId is required",
+      });
+    }
+
+    const reel = await reelsModel.findByIdAndDelete(reelId);
+
+    if (!reel) {
+      return res.status(404).json({
+        success: false,
+        message: "reel is not found",
+      });
+    }
+
+    return res.status(200).json({
+      success: true,
+      message: "reel delete successfully",
+    });
+  } catch (error) {
+      console.log(error)
+      return res.status(500).json({
+        success:false,
+        message:"Internal server error"
+      });
+   }
 };
